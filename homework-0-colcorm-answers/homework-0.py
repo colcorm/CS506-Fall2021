@@ -38,21 +38,23 @@ def find_medians(at_arry):
     # Takes as input an array
     # Returns an array of the median values of each attribute
     medians, temp = [], []
-    for line in at_arry:
-        for attr in at_arry:
-            if attr == float("nan"):
-                attr = 0
     
     medians = [[row[i] for row in at_arry] for i in range(len(at_arry[0]))]
 
     for line in medians:
-        count = 0
-        sum = 0
-        for val in line:
-            count += 1
-            sum += val
-        line = sum/count 
+        for attr in line:
+            if attr == float("nan"):
+                line.remove(float("nan"))
+    for line in medians:
+        line = sorted(line)
+        len_line = len(line)
+        index = (len_line - 1) // 2
 
+        if (len_line % 2):
+            line = line[index]
+        else:
+            line = (line[index] + line[index + 1])/2.0
+    
     return medians
 
     
