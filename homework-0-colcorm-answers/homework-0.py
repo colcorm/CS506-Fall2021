@@ -1,3 +1,4 @@
+import random
 
 # Purpose: read data from a file that contains information about patients.
 #          seperate patient attributes from their class and returns both arrays 
@@ -73,6 +74,52 @@ def discard_missing(at_arry, cl_arry):
         at_arry.remove(-1)
         cl_arry.remove(-1)
         
+    
+    return at_arry
+
+# Purpose: Shuffles the data points while keeping the corresponding at and cl
+#          values at the same index
+def shuffle_data(at_arry, cl_arry):
+    # Takes as input two arrays
+    # Returns both arrays shuffled 
+    temp = list(zip(at_arry, cl_arry))
+    random.shuffle(temp)
+    at_arry_sh, cl_arry_sh = zip(*temp)
+    return at_arry_sh, cl_arry_sh
+
+# Purpose: Calculates the standard deviation of of each attribute in the sample set
+def compute_sd(at_arry):
+    # Takes as input an array
+    # Returns an array in which each value is the stdev of the corresponding attribute.
+    sd_list = []
+    for line in at_arry:
+        mean = sum(line) / len(line)
+        variance = sum([((attr - mean) ** 2) for attr in line]) / len(line)
+        sd = variance ** 0.5
+        sd_list.append(sd)
+    return sd_list
+
+# Purpose: Removes entries that contain outlier attributes, outlier is definded as
+#          being 2 stdev away from the mean value
+def remove_outlier(at_arry, cl_arry):
+    # Takes as input two arrays
+    # Returns both arrays with the outlier entries excluded
+    stdev = compute_sd(at_arry)
+    delete = []
+    line_count = 0
+    del_count = 0
+    for line in at_arry:
+        mean = sum(line) / len(line)
+        for attr in line:
+            if attr > (mean + (2 * stdev[line_count])):
+                at_arry[line_count] = -1
+                cl_arry[line_count] = -1
+                del_count += 1
+        line_count += 1
+    
+    for x in range(0, del_count):
+        at_arry.remove(-1)
+        cl_arry.remove(-1)
     
     return at_arry
 
