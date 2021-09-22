@@ -163,6 +163,30 @@ def import_train(filename):
     return at_arry, sur_arry
 
 
+def train_test_split(X, y, t_f):
+    X_train, y_train = [], []
+    X_test = X
+    y_test = y
+
+    len_entry = len(X)
+    len_t_entry = round(len_entry * t_f)
+    
+    t_picks = random.sample(range(len_entry - 1), len_t_entry)
+    num_list = list(range(0,len_entry - 1))
+
+    for num in t_picks:
+        X_train.append(X[num])
+        y_train.append(y[num])
+    
+    count = (len(num_list) - 1)
+    for num in num_list[::-1]:
+        if num in t_picks:
+            del X_test[count]
+            del y_test[count]
+        count += -1
+    
+    return X_train, y_train, X_test, y_test
+
     
             
             
