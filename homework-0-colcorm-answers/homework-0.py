@@ -162,8 +162,11 @@ def import_train(filename):
         line_count += 1      
     return at_arry, sur_arry
 
-
+# Purpose: Splits a data set between a train and a test set based on a
+# value t_f which represents the porportion of data to be used in the test set
 def train_test_split(X, y, t_f):
+    # Takes two lists and a value t_f that is a number 0 < t_f < 1
+    # Returns four lists that represent the split data set
     X_train, y_train = [], []
     X_test = X
     y_test = y
@@ -171,6 +174,7 @@ def train_test_split(X, y, t_f):
     len_entry = len(X)
     len_t_entry = round(len_entry * t_f)
     
+    # picks a random list of non-repeated integers representing indicies in a list
     t_picks = random.sample(range(len_entry - 1), len_t_entry)
     num_list = list(range(0,len_entry - 1))
 
@@ -186,6 +190,61 @@ def train_test_split(X, y, t_f):
         count += -1
     
     return X_train, y_train, X_test, y_test
+
+# Purpose: Splits a data set between a train, cv, and test set based on a
+# value t_f, and cv_f which represents the porportion of data to be used in 
+# the test set and cv test respectively
+def train_test_CV_split(X, y, t_f, cv_f):
+    # Takes two lists and two values t_f, c_f that are numbers 0 < t_f,c_f < 1
+    # Returns six lists that represent the split data set
+
+    X_train, y_train= [], []
+    X_test = X
+    y_test = y
+
+    len_entry = len(X)
+    len_t_entry = round(len_entry * t_f)
+    len_cv_entry = round(len_entry * cv_f)
+    
+    # picks a random list of non-repeated integers representing indicies in a list
+    t_picks = random.sample(range(len_entry - 1), len_t_entry)
+    num_list = list(range(0,len_entry - 1))
+
+    for num in t_picks:
+        X_train.append(X[num])
+        y_train.append(y[num])
+    
+    count = (len(num_list) - 1)
+    for num in num_list[::-1]:
+        if num in t_picks:
+            del X_test[count]
+            del y_test[count]
+        count += -1
+    
+
+    # this nexts section repeats the above process but uses X_test to pull the cv values from
+    X_cv = X_test
+    y_cv = y_test
+
+    len_test = len(X_test)
+
+    # picks a random list of non-repeated integers representing indicies in a list
+    cv_picks = random.sample(range(len_test - 1), len_cv_entry)
+    cv_list = list(range(0, len_test - 1))
+
+    for num in cv_picks:
+        X_cv.append(X_test[num])
+        y_cv.append(y_test[num])
+    
+    count = (len(cv_list) - 1)
+    for num in cv_list[::-1]:
+        if num in cv_picks:
+            del X_test[count]
+            del y_test[count]
+        count += -1
+
+
+    return X_train, y_train, X_test, y_test, X_cv, y_cv
 
     
             
