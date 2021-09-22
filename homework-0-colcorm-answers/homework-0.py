@@ -6,19 +6,21 @@ def import_data(filename):
     # Takes as input a filename
     # Returns two arrays
     at_arry, cl_arry = [], [] # creates two empty arrays
+    
     file = open(filename, 'r') # opens the file "filename" in read mode
-    # loop through the file
-    for line in file:
-        lst = line.split(',') # split up entries with comma
-        cl_arry.append(lst[-1]) # get the class value off the end
-        # get attributes
-        for x in lst[0:len(lst) - 1]:
-            # if attribute is "?" store as "NaN"
+    lines = file.readlines()
+    
+    for line in lines:
+        lst = line.split(',')
+        cl_arry.append(lst[-1][0:-1]) # get the class value off the end
+        
+        temp = []
+        for x in lst[0:-1]:
             if x == "?":
-                at_arry.append(float("nan"))
+                temp.append(float("nan"))
             else:
-                at_arry.append(x)
-    # return arrays
+                temp.append(x)
+        at_arry.append(temp)
     file.close()
     return at_arry, cl_arry
 
@@ -50,9 +52,9 @@ def find_medians(at_arry):
         index = (len_line - 1) // 2
 
         if (len_line % 2):
-            medians[count] = line[index]
+            medians[count] = float(line[index])
         else:
-            medians[count] = (line[index] + line[index + 1])/2.0
+            medians[count] = float(line[index]) + float(line[index + 1])/2.0
         count += 1
     return medians
 
@@ -76,7 +78,7 @@ def discard_missing(at_arry, cl_arry):
         cl_arry.remove(-1)
         
     
-    return at_arry
+    return at_arry, cl_arry
 
 # Purpose: Shuffles the data points while keeping the corresponding at and cl
 #          values at the same index
@@ -94,6 +96,7 @@ def compute_sd(at_arry):
     # Returns an array in which each value is the stdev of the corresponding attribute.
     sd_list = []
     for line in at_arry:
+        line = [float(x) for x in line]
         mean = sum(line) / len(line)
         variance = sum([((attr - mean) ** 2) for attr in line]) / len(line)
         sd = variance ** 0.5
@@ -110,6 +113,7 @@ def remove_outlier(at_arry, cl_arry):
     line_count = 0
     del_count = 0
     for line in at_arry:
+        line = [float(x) for x in line]
         mean = sum(line) / len(line)
         for attr in line:
             if attr > (mean + (2 * stdev[line_count])):
@@ -245,8 +249,3 @@ def train_test_CV_split(X, y, t_f, cv_f):
 
 
     return X_train, y_train, X_test, y_test, X_cv, y_cv
-
-    
-            
-            
-    
