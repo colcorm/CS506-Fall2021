@@ -1,0 +1,9 @@
+Problem 2 b)
+    The reason why it is better to use the median instead of the
+    mean of an attribute for missing values is that if we used the
+    means of the data there would be the potential for outliers 
+    in our data set to dominate the mean either inflating it, or 
+    deflating it out of the normal range of most values in the set.
+    By using the median we solve this problem and there is a more 
+    probable chance that we get a value that reflects the typical
+    value for an attribute in that category.
