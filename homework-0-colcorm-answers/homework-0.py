@@ -19,6 +19,7 @@ def import_data(filename):
             else:
                 at_arry.append(x)
     # return arrays
+    file.close()
     return at_arry, cl_arry
 
 # Purpose: Replaces "NaN" values in at_arry with the median of the attributes
@@ -123,6 +124,43 @@ def remove_outlier(at_arry, cl_arry):
     
     return at_arry
 
+# Purpose: Read data from the train.csv file. Splits the data into two arrays.
+# at_arry handles the attributes, sur_arry handles if they survived or not
+def import_train(filename):
+    # Takes as input a filename
+    # Returns two arrays
+    at_arry, sur_arry, lst = [], [], [] # creates two empty arrays
+    file = open(filename, 'r') # opens the file "filename" in read mode
+    # loop through the file
+    lines = file.readlines()
+    line_count = 0
+    for line in lines:
+        lst = line.split(',') # split up entries with comma
+        for x in [11, 9, 4, 3]:
+            del lst[x]
+        if line_count > 0:
+            sur_arry.append(lst[1])
+            del lst[1]
+            att_num = 0
+            for x in lst:
+                if att_num == 2:
+                    if x == "female":
+                        lst[2] = 0
+                    else:
+                        lst[2] = 1
+                elif att_num == 7:
+                    if x == "C":
+                        lst[7] = 0
+                    elif x == "Q":
+                        lst[7] = 1
+                    else:
+                        lst[7] = 2
+                else:
+                    lst[att_num] = x
+                att_num += 1
+            at_arry.append(lst)
+        line_count += 1      
+    return at_arry, sur_arry
 
 
     
